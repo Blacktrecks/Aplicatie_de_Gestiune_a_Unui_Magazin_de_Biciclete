@@ -54,7 +54,7 @@ class Program
       client1.AddCos(bicicleta2);
 
       // Afiseaza numele clientului /adresa de email /telefon
-      Console.WriteLine($"\n\tClient: \nNume Client: {client1.Nume}, \nAdresa Email: {client1.Email}, \nTelefon: {client1.Telefon}\n");
+      Console.WriteLine($"Client:\n=========== \nNume Client: {client1.Nume}, \nAdresa Email: {client1.Email}, \nTelefon: {client1.Telefon}\n");
 
       // Afisare biciclete in cosul clientului
       Console.WriteLine("Cos CLient: \n==========");
