@@ -26,7 +26,7 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
       //Supradefinim si returnam variabilele clasei
       public override string ToString()
       {
-         return $"Brand: {Brand}, Model: {Model}, Pret: {Pret:C}RON, Disponibilitate: {(Stoc ? "DA" : "NU")}";
+         return $"Brand: {Brand}, Model: {Model}, Pret: {Pret}RON, Disponibilitate: {(Stoc ? "DA" : "NU")}";
       }
 
       // Clasa MagazinBicicleta reprezinta un magazin online ce vinde biciclete
