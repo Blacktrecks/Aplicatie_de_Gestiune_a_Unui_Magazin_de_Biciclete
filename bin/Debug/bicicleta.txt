@@ -1,0 +1,7 @@
+1,Model 1,Brand 1,100,true
+2,Model 2,Brand 2,200,false
+3,Model 3,Brand 3,300,true
+1,wASABI,Sad,234,False
+2,asrea,awq,1234,True
+5,wersace,wer,5678,True
+5,reds,tre,8907,True
