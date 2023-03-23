@@ -5,5 +5,6 @@
 # Am creat clasele de baza necesare : 
 -class Bicicleta ce contine detalii despre bicicleta aleasa: principalele variabile si initializarea lor printr-un constructor
 -class MagazinBicicleta ce preia detaliile din class Bicicleta si implementeaza o lista si metode de baza: AdaugaBicicleta(), GetBicicleta(), GetBicicleteDisponibile(),  GetPretTotal()
+-class Client ce initializeaza datele si adauga un client nou
 
 #In fisierul: "Program.cs" am testat demo functionalitatea metodelor implementate prin crearea unor obiecte: biciclete adaugate in magazin si verificarea stocului lor.

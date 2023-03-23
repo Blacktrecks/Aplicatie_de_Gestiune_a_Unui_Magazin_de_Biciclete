@@ -1,12 +1,14 @@
+
 ﻿using System;
 using System.IO;
+using System.Security.Cryptography.X509Certificates;
 using static Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete.Bicicleta;
 
 namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
-{
+{ 
    class Program
-   {
-      static void Main(string[] args)
+   { 
+      static void Main()
       {
          MagazinBicicleta magazin = new MagazinBicicleta();
 
@@ -22,6 +24,8 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
             Console.WriteLine("7 - Proceseaza comanda");
             Console.WriteLine("8 - Afiseaza pretul total al bicicletelor din magazin");
             Console.WriteLine("9 - Citire si afisare date din fisier");
+            Console.WriteLine("10 - Efectuare comanda client");
+            Console.WriteLine("11 - Cautare");
             Console.WriteLine("0 - Iesire");
 
             int option = int.Parse(Console.ReadLine());
@@ -30,17 +34,26 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
             {
                case 1:
                   Console.WriteLine("\nIntroduceti informatiile pentru bicicleta:");
-                  Console.Write("Brand: ");
-                  string brand = Console.ReadLine();
+                  Console.Write("Id: ");
+                  double id = double.Parse(Console.ReadLine());
                   Console.Write("Model: ");
                   string model = Console.ReadLine();
+                  Console.Write("Brand: ");
+                  string brand = Console.ReadLine();
                   Console.Write("Pret: ");
                   double pret = double.Parse(Console.ReadLine());
                   Console.Write("Disponibilitate (DA/NU): ");
                   bool stoc = Console.ReadLine().ToLower() == "da" ? true : false;
 
-                  Bicicleta bicicleta = new Bicicleta(brand, model, pret, stoc);
+                  Bicicleta bicicleta = new Bicicleta(id,brand, model, pret, stoc);
                   magazin.AddBicicleta(bicicleta);
+
+                  //Salvare bicicleta in fisier txt
+                  using (StreamWriter sw = new StreamWriter("bicicleta.txt", true))
+                  {
+                     sw.WriteLine($"{id},{model},{brand},{pret},{stoc}");
+                  }
+
 
                   Console.WriteLine("\nBicicleta a fost adaugata in magazin!");
                   Console.WriteLine(bicicleta.ToString());
@@ -48,6 +61,8 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
 
                case 2:
                   Console.WriteLine("\nIntroduceti informatiile pentru bicicleta de sters:");
+                  Console.Write("Id: ");
+                  double idToDelete = double.Parse(Console.ReadLine());
                   Console.Write("Brand: ");
                   string brandToDelete = Console.ReadLine();
                   Console.Write("Model: ");
@@ -87,6 +102,11 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
                   Client client = new Client(nume, email, telefon);
                   magazin.AddClient(client);
 
+                  //Adaugare clienti cititi de la tastatura in fisier
+                  using (StreamWriter sw = new StreamWriter("client.txt", true))
+                  {
+                     sw.WriteLine($"{nume}, {email},{telefon}");
+                  }
                   Console.WriteLine("\nClientul a fost adaugat in magazin!");
                   Console.WriteLine(client.ToString());
                   break;
@@ -111,7 +131,7 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
                   Console.WriteLine("\nIntroduceti informatiile pentru comanda:");
                   Console.Write("Nume client: ");
                   string numeClientComanda = Console.ReadLine();
-                  Console.Write("Email client: ");
+                  Console.Write("Email c9lient: ");
                   string emailClientComanda = Console.ReadLine();
                   Console.Write("Telefon client: ");
                   string telefonClientComanda = Console.ReadLine();
@@ -142,8 +162,39 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
                   Console.WriteLine($"\nPretul total al bicicletelor din magazin este: {magazin.GetPretTotalBiciclete()} RON");
                   break;
                case 9:
-                  var dataReader = new DataReader("biciclete.txt", "clienti.txt");
+                  var dataReader = new DataReader("bicicleta.txt", "client.txt");
                   dataReader.PrintBicyclesAndClients();
+                  break;
+               case 10:
+                  Console.WriteLine("Introduceti adresa de email a clientului:");
+                  var clientEmail = Console.ReadLine();
+                  Console.WriteLine("Introduceti id-ul bicicletei:");
+                  var bicycleId = int.Parse(Console.ReadLine());
+
+                  
+                  //Magazin.AddToCart(clientEmail, bicycleId);
+                  Console.WriteLine("Bicicleta a fost adaugata in cosul clientului cu succes!");
+                  break;
+               case 11:
+                  Console.WriteLine("Introduceti criteriul de cautare(id,model,brand):");
+                  string criteria = Console.ReadLine();
+
+                  // Search for bikes
+                  var bicicleteGasite = magazin.SearchBiciclete(criteria);
+
+                  // Display search results
+                  if (bicicleteGasite.Count > 0)
+                  {
+                     Console.WriteLine("\nBiciclete gasite:\n");
+                     foreach (Bicicleta b in bicicleteGasite)
+                     {
+                        Console.WriteLine(b.ToString());
+                     }
+                  }
+                  else
+                  {
+                     Console.WriteLine("\nNu s-au gasit biciclete care sa corespunda criteriilor de cautare.");
+                  }
                   break;
                case 0:
                   Console.WriteLine("\nLa revedere!");
@@ -153,5 +204,3 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
       }
    }
 }
-
-
