@@ -8,7 +8,7 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
 {
    //Clasa Bicicleta reprezinta bicicleta cu urmatoarele caracteristici: brand, model, pret si disponibilitate pe stoc
 
-  public class Bicicleta
+   public class Bicicleta
    {
       public double Id { get; set; }
       public string Brand { get; set; }
@@ -41,10 +41,10 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
          public List<Client> Clienti { get; set; }
 
          public MagazinBicicleta()
-         { 
-               Inventar = new List<Bicicleta>();
-               Clienti = new List<Client>();
-            
+         {
+            Inventar = new List<Bicicleta>();
+            Clienti = new List<Client>();
+
          }
 
          //Adauga bicicleta 
@@ -74,7 +74,7 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
             return bicicleteDisponibile.Count > 0 ? bicicleteDisponibile : new List<Bicicleta>();
 
          }
-         
+
          //adauga bicicleta in magazin
          public void AddBicicleta(Bicicleta bicicleta)
          {
@@ -133,7 +133,7 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
                   pretTotal += bicicleta.Pret;
                }
             }
-            
+
             return pretTotal;
          }
 
@@ -142,7 +142,7 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
          {
             try
             {
-               using (StreamWriter sw = new StreamWriter("bicicleta.txt",true))
+               using (StreamWriter sw = new StreamWriter("bicicleta.txt", true))
                {
                   foreach (Bicicleta bicicleta in _biciclete)
                   {
@@ -175,13 +175,12 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
    /// </summary>
    public class Client
    {
-      private IEnumerable<Client> clienti;
+      private List<Client> _clienti = new List<Client>();
 
       public string Nume { get; set; }
       public string Email { get; set; }
       public string Telefon { get; set; }
       public List<Bicicleta> Cos { get; set; }
-
 
       //Initializare constructor pentru clasa client
       public Client(string nume, string email, string telefon)
@@ -203,21 +202,15 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
       {
          Cos.Remove(bicicleta);
       }
-      ///Cauta biciclete
-    
-         public void Checkout()
-      {
-         // verifica cosul
-      }
 
       //Functie de salvare a datelor preluate de la tastatura despre clienti intr-un fisier text
       public void SalveazaClienti(string filePath)
       {
          try
          {
-            using (StreamWriter sw = new StreamWriter("client.txt", true))
+            using (StreamWriter sw = new StreamWriter(filePath, true))
             {
-               foreach (Client client in clienti)
+               foreach (Client client in _clienti)
                {
                   sw.WriteLine($"{client.Nume},{client.Email},{client.Telefon}");
                }
@@ -229,9 +222,33 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
          }
       }
 
-     
+      //Cauta clienti
 
+      public void SearchClienti(string criteria)
+      {
+         var matchingClienti = _clienti.Where(client => client.Nume.Contains(criteria)).ToList();
+
+         if (matchingClienti.Count > 0)
+         {
+            Console.WriteLine($"Am gasit {matchingClienti.Count} clienti care corespund criteriului de cautare '{criteria}':");
+            foreach (var client in matchingClienti)
+            {
+               Console.WriteLine(client.ToString());
+            }
+         }
+         else
+         {
+            Console.WriteLine($"Nu am gasit niciun client care corespunde criteriului de cautare '{criteria}'.");
+         }
+      }
+
+      // Facem suprascrierea metodei ToString pentru afisarea datelor despre clienti int-un format citibil
+      public override string ToString()
+      {
+         return $"Nume: {Nume}, Email: {Email}, Telefon: {Telefon}";
+      }
    }
+
 }
 
 /// <summary>
@@ -248,6 +265,7 @@ public class DataReader
       _clientFilePath = clientFilePath;
    }
 
+   //Afisare bicicleta si client
    public void PrintBicyclesAndClients()
    {
       var biciclete = ReadBicyclesFromFile(_bicycleFilePath);
@@ -274,7 +292,7 @@ public class DataReader
          Console.WriteLine();
       }
    }
-
+   //Citire biciclete din fisier
    private List<Bicicleta> ReadBicyclesFromFile(string filePath)
    {
       var biciclete = new List<Bicicleta>();
@@ -307,7 +325,7 @@ public class DataReader
 
       return biciclete;
    }
-
+   //Citire clienti din fisier
    private List<Client> ReadClientsFromFile(string filePath)
    {
       var clienti = new List<Client>();
@@ -368,7 +386,7 @@ public class DataReader
    }
 
    //Generarea Comenziii
-  
+
    public void AddToCart(string clientEmail, int bicycleId)
    {
       var clienti = ReadClientsFromFile(_clientFilePath);
@@ -381,7 +399,7 @@ public class DataReader
          UpdateComandaFile(clienti);
       }
    }
-
+   //Update comanda
    private void UpdateComandaFile(List<Client> clienti)
    {
       try
