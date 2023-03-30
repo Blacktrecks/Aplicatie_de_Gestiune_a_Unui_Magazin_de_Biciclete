@@ -10,29 +10,37 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
    { 
       static void Main()
       {
+         
          MagazinBicicleta magazin = new MagazinBicicleta();
+
 
          while (true)
          {
+            Console.WriteLine("╔══════════════════════════════════════════════════════════╗");
+            Console.WriteLine("║                      MENIU PRINCIPAL                     ║");
+            Console.WriteLine("╠══════════════════════════════════════════════════════════╣");
+            Console.WriteLine("║   1  - Adauga bicicleta                                  ║");
+            Console.WriteLine("║   2  - Sterge bicicleta                                  ║");
+            Console.WriteLine("║   3  - Afiseaza lista biciclete                          ║");
+            Console.WriteLine("║   4  - Afiseaza stocul bicicletelor                      ║");
+            Console.WriteLine("║   5  - Adauga client                                     ║");
+            Console.WriteLine("║   6  - Sterge client                                     ║");
+            Console.WriteLine("║   7  - Proceseaza comanda                                ║");
+            Console.WriteLine("║   8  - Afiseaza pretul total al bicicletelor din magazin ║");
+            Console.WriteLine("║   9  - Citire si afisare date din fisier                 ║");
+            Console.WriteLine("║   10 - Efectuare comanda client                          ║");
+            Console.WriteLine("║   11 - Cautare                                           ║");
+            Console.WriteLine("║   12 - Cautare Clienti                                   ║");
+            Console.WriteLine("║   13 - Iesire                                            ║");
+            Console.WriteLine("╚══════════════════════════════════════════════════════════╝");
             Console.WriteLine("\nSelectati o optiune:");
-            Console.WriteLine("1 - Adauga bicicleta");
-            Console.WriteLine("2 - Sterge bicicleta");
-            Console.WriteLine("3 - Afiseaza lista biciclete");
-            Console.WriteLine("4 - Afiseaza stocul bicicletelor");
-            Console.WriteLine("5 - Adauga client");
-            Console.WriteLine("6 - Sterge client");
-            Console.WriteLine("7 - Proceseaza comanda");
-            Console.WriteLine("8 - Afiseaza pretul total al bicicletelor din magazin");
-            Console.WriteLine("9 - Citire si afisare date din fisier");
-            Console.WriteLine("10 - Efectuare comanda client");
-            Console.WriteLine("11 - Cautare");
-            Console.WriteLine("0 - Iesire");
 
             int option = int.Parse(Console.ReadLine());
 
             switch (option)
             {
                case 1:
+                  //Adaugare bicicleta
                   Console.WriteLine("\nIntroduceti informatiile pentru bicicleta:");
                   Console.Write("Id: ");
                   double id = double.Parse(Console.ReadLine());
@@ -60,6 +68,7 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
                   break;
 
                case 2:
+                  //Stergere bicicleta
                   Console.WriteLine("\nIntroduceti informatiile pentru bicicleta de sters:");
                   Console.Write("Id: ");
                   double idToDelete = double.Parse(Console.ReadLine());
@@ -112,7 +121,7 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
                   break;
 
                case 6:
-
+                  //Stergere client
                   Console.WriteLine("\nIntroduceti informatiile pentru clientul de sters:");
                   Console.Write("Nume: ");
                   string numeClient = Console.ReadLine();
@@ -128,6 +137,7 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
                   break;
 
                case 7:
+                  //Initializare comanda
                   Console.WriteLine("\nIntroduceti informatiile pentru comanda:");
                   Console.Write("Nume client: ");
                   string numeClientComanda = Console.ReadLine();
@@ -179,10 +189,10 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
                   Console.WriteLine("Introduceti criteriul de cautare(id,model,brand):");
                   string criteria = Console.ReadLine();
 
-                  // Search for bikes
+                  // Cautare biciclete
                   var bicicleteGasite = magazin.SearchBiciclete(criteria);
 
-                  // Display search results
+                  // Afisare rezultate
                   if (bicicleteGasite.Count > 0)
                   {
                      Console.WriteLine("\nBiciclete gasite:\n");
@@ -196,7 +206,31 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
                      Console.WriteLine("\nNu s-au gasit biciclete care sa corespunda criteriilor de cautare.");
                   }
                   break;
-               case 0:
+               case 12:
+                  Console.WriteLine("\nIntroduceti numele clientului pentru cautare:");
+                  string numeCautare = Console.ReadLine();
+
+                  Client foundClient = null; // initializare variabila client
+
+                  try
+                  {
+                     foundClient = magazin.Clienti.Find(c => c.Nume.ToLower() == numeCautare.ToLower()); // assign a value to the client variable
+                     Console.WriteLine(foundClient.ToString());
+                  }
+                  catch (Exception ex)
+                  {
+                     Console.WriteLine("Eroare: " + ex.Message);
+                  }
+
+                  if (foundClient == null)
+                  {
+                     Console.WriteLine("Clientul nu a fost gasit!");
+                  }
+
+                  break;
+
+
+               case 13:
                   Console.WriteLine("\nLa revedere!");
                   return;
             }
