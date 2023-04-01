@@ -5,12 +5,33 @@ using System.Security.Cryptography.X509Certificates;
 using static Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete.Bicicleta;
 
 namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
-{ 
+{
    class Program
-   { 
+   {
       static void Main()
+      { 
+         //INCERCARE CITIRE FISIER CA ARGUMENT IN LINIIA DE COMANDA
+     /* static void Main(string[] args)
       {
-         
+         if (args.Length == 0)
+         {
+            Console.WriteLine("Nu s-a specificat niciun fișier.");
+            return;
+         }
+
+         string fileName = args[0];
+         Console.WriteLine("Numele fișierului: " + fileName);
+
+         // Deschide fișierul și citeste-l.
+         using (StreamReader reader = new StreamReader(fileName))
+         {
+            string line;
+            while ((line = reader.ReadLine()) != null)
+            {
+               Console.WriteLine(line);
+            }
+         }
+*/
          MagazinBicicleta magazin = new MagazinBicicleta();
 
 
@@ -33,7 +54,10 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
             Console.WriteLine("║   12 - Cautare Clienti                                   ║");
             Console.WriteLine("║   13 - Iesire                                            ║");
             Console.WriteLine("╚══════════════════════════════════════════════════════════╝");
-            Console.WriteLine("\nSelectati o optiune:");
+            Console.WriteLine("\n");
+            Console.WriteLine("╔══════════════════════════════════════════════════════════╗");
+            Console.WriteLine("║Selectati o optiune:                                      ║");
+            Console.WriteLine("╚══════════════════════════════════════════════════════════╝");
 
             int option = int.Parse(Console.ReadLine());
 
@@ -42,8 +66,6 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
                case 1:
                   //Adaugare bicicleta
                   Console.WriteLine("\nIntroduceti informatiile pentru bicicleta:");
-                  Console.Write("Id: ");
-                  double id = double.Parse(Console.ReadLine());
                   Console.Write("Model: ");
                   string model = Console.ReadLine();
                   Console.Write("Brand: ");
@@ -52,14 +74,19 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
                   double pret = double.Parse(Console.ReadLine());
                   Console.Write("Disponibilitate (DA/NU): ");
                   bool stoc = Console.ReadLine().ToLower() == "da" ? true : false;
-
-                  Bicicleta bicicleta = new Bicicleta(id,brand, model, pret, stoc);
+                  //introducem enumerarea
+                  Console.Write("Culoare (Rosu/Alb/Negru): ");
+                  Culoare culoare = (Culoare)Enum.Parse(typeof(Culoare), Console.ReadLine(), true);
+                  Console.Write("Opțiuni (Electrica/Pliabila/Mini): ");
+                  Optiuni optiuni = (Optiuni)Enum.Parse(typeof(Optiuni), Console.ReadLine(), true);
+                  int id = new Random().Next(1000, 9999);
+                  Bicicleta bicicleta = new Bicicleta(id,brand, model, pret, stoc,culoare,optiuni);
                   magazin.AddBicicleta(bicicleta);
 
                   //Salvare bicicleta in fisier txt
                   using (StreamWriter sw = new StreamWriter("bicicleta.txt", true))
                   {
-                     sw.WriteLine($"{id},{model},{brand},{pret},{stoc}");
+                     sw.WriteLine($"{model},{brand},{pret},{stoc}");
                   }
 
 
@@ -141,7 +168,7 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
                   Console.WriteLine("\nIntroduceti informatiile pentru comanda:");
                   Console.Write("Nume client: ");
                   string numeClientComanda = Console.ReadLine();
-                  Console.Write("Email c9lient: ");
+                  Console.Write("Email cilient: ");
                   string emailClientComanda = Console.ReadLine();
                   Console.Write("Telefon client: ");
                   string telefonClientComanda = Console.ReadLine();
@@ -169,13 +196,16 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
                   break;
 
                case 8:
+                  //Pretul total al bicicletelor din magazin
                   Console.WriteLine($"\nPretul total al bicicletelor din magazin este: {magazin.GetPretTotalBiciclete()} RON");
                   break;
                case 9:
+                  //Afisare biciclete si clienti din fisier
                   var dataReader = new DataReader("bicicleta.txt", "client.txt");
                   dataReader.PrintBicyclesAndClients();
                   break;
                case 10:
+                  //Scrie in fisier comanda.txt - nu functioneaza
                   Console.WriteLine("Introduceti adresa de email a clientului:");
                   var clientEmail = Console.ReadLine();
                   Console.WriteLine("Introduceti id-ul bicicletei:");
@@ -186,6 +216,7 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
                   Console.WriteLine("Bicicleta a fost adaugata in cosul clientului cu succes!");
                   break;
                case 11:
+                  //Cautare biciclete dupa criterii
                   Console.WriteLine("Introduceti criteriul de cautare(id,model,brand):");
                   string criteria = Console.ReadLine();
 
@@ -207,6 +238,7 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
                   }
                   break;
                case 12:
+                  //Cautare clienti in magazin
                   Console.WriteLine("\nIntroduceti numele clientului pentru cautare:");
                   string numeCautare = Console.ReadLine();
 
@@ -231,6 +263,7 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
 
 
                case 13:
+                  //Iesire din program
                   Console.WriteLine("\nLa revedere!");
                   return;
             }
