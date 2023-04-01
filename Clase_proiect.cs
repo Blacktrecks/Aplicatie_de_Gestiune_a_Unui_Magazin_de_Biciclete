@@ -7,7 +7,22 @@ using System.Linq;
 namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
 {
    //Clasa Bicicleta reprezinta bicicleta cu urmatoarele caracteristici: brand, model, pret si disponibilitate pe stoc
+  //Adaugare enum in clasa bicicleta
+   public enum Culoare
+   {
+      Verde,
+      Albastru,
+      Alb
+   }
 
+   [Flags]
+   public enum Optiuni
+   {
+      None = 0,
+      Electrica = 1,
+      Pliabila = 2,
+      Mini = 4
+   }
    public class Bicicleta
    {
       public double Id { get; set; }
@@ -15,21 +30,32 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
       public string Model { get; set; }
       public double Pret { get; set; }
       public bool Stoc { get; set; }
+      public Culoare Culoare { get; set; }
+      public Optiuni Optiuni { get; set; }
 
       //Initializare constructor al clasei Bicicleta
-      public Bicicleta(double id, string brand, string model, double pret, bool stoc)
+      public Bicicleta(int id, string brand, string model, double pret, bool stoc, Culoare culoare, Optiuni optiuni)
       {
-         Id = id;
+         Id = GenerateRandomId();
          Brand = brand;
          Model = model;
          Pret = pret;
          Stoc = stoc;
+         Culoare = culoare;
+         Optiuni = optiuni;
       }
 
-      //Supradefinim si returnam variabilele clasei
+      //Generare random id pentru fiecare bicicleta
+      public double GenerateRandomId()
+      {
+         Random rnd = new Random();
+         return rnd.Next(10000, 100000);
+      }
+
+      //Returnam variabilele clasei
       public override string ToString()
       {
-         return $"Id: {Id}, Brand: {Brand}, Model: {Model}, Pret: {Pret}RON, Disponibilitate: {(Stoc ? "DA" : "NU")}";
+         return $"Id: {Id}, Brand: {Brand}, Model: {Model}, Pret: {Pret}RON, Disponibilitate: {(Stoc ? "DA" : "NU")}, Culoare: {Culoare}, Optiuni: {Optiuni}";
       }
 
       // Clasa MagazinBicicleta reprezinta un magazin online ce vinde biciclete
@@ -111,6 +137,7 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
 
          //Pretul tuturor bicicletelor in magazin
          //In constructie
+         //Returneaza pretul total al bicicletelor recent adaugate
 
          public double GetPretTotal()
          {
@@ -142,11 +169,12 @@ namespace Aplicatie_de_Gestiune_a_Unui_Magazin_de_Biciclete
          {
             try
             {
-               using (StreamWriter sw = new StreamWriter("bicicleta.txt", true))
+               using (StreamWriter sw = new StreamWriter("bicicleta.txt", true)) //il deschizi si suprascrii continut prin true
                {
                   foreach (Bicicleta bicicleta in _biciclete)
                   {
-                     sw.WriteLine($"{bicicleta.Id},{bicicleta.Brand},{bicicleta.Model},{bicicleta.Pret},{bicicleta.Stoc}");
+                     var id = new Random().Next(1000, 10000);
+                     sw.WriteLine($"{bicicleta.Id},{bicicleta.Brand},{bicicleta.Model},{bicicleta.Pret},{bicicleta.Stoc}, {bicicleta.Culoare}, {bicicleta.Optiuni}");
                   }
                }
             }
@@ -306,14 +334,42 @@ public class DataReader
             {
                var bicycleData = line.Split(',');
 
-               var id = int.Parse(bicycleData[0]);
-               var model = bicycleData[1];
-               var brand = bicycleData[2];
-               var pret = int.Parse(bicycleData[3]);
-               var disponibilitate = bool.Parse(bicycleData[4]);
+               if (bicycleData.Length < 7)
+               {
+                  Console.WriteLine($"Linia '{line}' din fisierul '{filePath}' nu contine suficiente campuri.");
+                  continue; // Skip to next line in case of error
+               }
 
+               var id = new Random().Next(1000, 9999);
+               var model = bicycleData[0];
+               var brand = bicycleData[1];
+               if (!double.TryParse(bicycleData[2], out double pret))
+               {
+                  Console.WriteLine($"Pretul nu este un numar valid pentru bicicleta {model} {brand}.");
+                  continue; // Skip to next line in case of error
+               }
+               if (!bool.TryParse(bicycleData[3], out bool disponibilitate))
+               {
+                  Console.WriteLine($"Disponibilitatea nu este o valoare booleana valida pentru bicicleta {model} {brand}.");
+                  continue; // Skip to next line in case of error
+               }
+               if (!Enum.TryParse(bicycleData[4], true, out Culoare culoare))
+               {
+                  Console.WriteLine($"Culoarea nu este o valoare valida pentru bicicleta {model} {brand}.");
+                  continue; // Skip to next line in case of error
+               }
+               if (!Enum.TryParse(bicycleData[5], true, out Optiuni optiuni))
+               {
+                  Console.WriteLine($"Optiunile nu sunt o valoare valida pentru bicicleta {model} {brand}.");
+                  continue; // Skip to next line in case of error
+               }
+               if (!int.TryParse(bicycleData[6], out int anFabricatie))
+               {
+                  Console.WriteLine($"Anul de fabricatie nu este un numar valid pentru bicicleta {model} {brand}.");
+                  continue; // Skip to next line in case of error
+               }
 
-               var bicicleta = new Bicicleta(id, model, brand, pret, disponibilitate);
+               var bicicleta = new Bicicleta(id, model, brand, pret, disponibilitate, culoare, optiuni);
                biciclete.Add(bicicleta);
             }
          }
@@ -325,6 +381,7 @@ public class DataReader
 
       return biciclete;
    }
+
    //Citire clienti din fisier
    private List<Client> ReadClientsFromFile(string filePath)
    {
@@ -379,7 +436,7 @@ public class DataReader
       }
       catch (Exception ex)
       {
-         Console.WriteLine($"A aprut o eroare la citirea clientilor din fisier: {ex.Message}");
+         Console.WriteLine($"A aparut o eroare la citirea clientilor din fisier: {ex.Message}");
       }
 
       return clienti;
@@ -399,22 +456,25 @@ public class DataReader
          UpdateComandaFile(clienti);
       }
    }
-   //Update comanda
+
+   //Adaugare date comanda intr-un fisier txt
    private void UpdateComandaFile(List<Client> clienti)
    {
       try
       {
-         using (var writer = new StreamWriter("comanda.txt"))
+         using (var writer = new StreamWriter("comanda.txt", true))
          {
             foreach (var client in clienti)
             {
                writer.WriteLine($"{client.Nume},{client.Email},{client.Telefon},{string.Join(",", client.Cos.Select(b => $"{b.Id},{b.Model},{b.Brand},{b.Pret}"))}");
             }
          }
+         Console.WriteLine("Comanda a fost adaugata cu succes!");
       }
       catch (Exception ex)
       {
          Console.WriteLine($"A aparut o eroare la salvarea comenzii in fisier: {ex.Message}");
       }
    }
+
 }
