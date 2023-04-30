@@ -1,0 +1,6 @@
+C:\Users\petri\OneDrive\Desktop\PROIECT PIU\Gestiune_Magazin_Biciclete\Gestiune_Biciclete\Gestiune_Biciclete_UI\obj\Debug\Gestiune_Biciclete_UI.csproj.AssemblyReference.cache
+C:\Users\petri\OneDrive\Desktop\PROIECT PIU\Gestiune_Magazin_Biciclete\Gestiune_Biciclete\Gestiune_Biciclete_UI\obj\Debug\Gestiune_Biciclete_UI.csproj.SuggestedBindingRedirects.cache
+C:\Users\petri\OneDrive\Desktop\PROIECT PIU\Gestiune_Magazin_Biciclete\Gestiune_Biciclete\Gestiune_Biciclete_UI\obj\Debug\MyFormApp.MainForm.resources
+C:\Users\petri\OneDrive\Desktop\PROIECT PIU\Gestiune_Magazin_Biciclete\Gestiune_Biciclete\Gestiune_Biciclete_UI\obj\Debug\Gestiune_Biciclete_UI.Properties.Resources.resources
+C:\Users\petri\OneDrive\Desktop\PROIECT PIU\Gestiune_Magazin_Biciclete\Gestiune_Biciclete\Gestiune_Biciclete_UI\obj\Debug\Gestiune_Biciclete_UI.csproj.GenerateResource.cache
+C:\Users\petri\OneDrive\Desktop\PROIECT PIU\Gestiune_Magazin_Biciclete\Gestiune_Biciclete\Gestiune_Biciclete_UI\obj\Debug\Gestiune_Biciclete_UI.csproj.CoreCompileInputs.cache
